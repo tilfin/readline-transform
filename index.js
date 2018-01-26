@@ -69,4 +69,6 @@ class ReadlineTransform extends Transform {
   }
 }
 
+ReadlineTransform.ReadlineTransform = ReadlineTransform;
+
 module.exports = ReadlineTransform;
