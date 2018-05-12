@@ -1,6 +1,6 @@
 {
   "name": "readline-transform",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Transform stream to read line-by-line and write a string",
   "main": "index.js",
   "scripts": {
@@ -22,12 +22,11 @@
   "homepage": "https://github.com/tilfin/readline-transform#readme",
   "author": "Toshimitsu Takahashi",
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "coveralls": "^3.0.0",
+    "coveralls": "^3.0.1",
     "istanbul": "^0.4.5",
-    "mocha": "^4.0.1"
+    "mocha": "^5.1.1"
   },
   "engines": {
     "node": ">=6"
