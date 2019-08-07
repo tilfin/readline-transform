@@ -4,7 +4,9 @@
   "description": "Transform stream to read line-by-line and write a string",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "ci_test": "nyc npm test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [
     "stream",
@@ -24,9 +26,9 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "coveralls": "^3.0.1",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.1.1"
+    "coveralls": "^3.0.4",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1"
   },
   "engines": {
     "node": ">=6"
