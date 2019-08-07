@@ -1,4 +1,4 @@
-const Transform = require('stream').Transform;
+const { Transform } = require('stream');
 
 /**
  * The ReadlineTransform is reading String or Buffer content from a Readable stream
@@ -69,4 +69,4 @@ class ReadlineTransform extends Transform {
   }
 }
 
-module.exports = ReadlineTransform;
+module.exports = exports.default = ReadlineTransform;
