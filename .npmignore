@@ -3,4 +3,3 @@ example
 test
 .gitignore
 .travis.yml
-Makefile
