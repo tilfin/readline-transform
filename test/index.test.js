@@ -19,7 +19,7 @@ describe('ReadlineTransform', () => {
       readStream.pipe(transform).pipe(writeStream);
 
       readStream.write(Buffer.from('foo\nba'));
-      readStream.write(Buffer.from('r\r'));
+      readStream.write('r\r');
       readStream.end(Buffer.from('\nbaz'));
     });
 
@@ -36,7 +36,7 @@ describe('ReadlineTransform', () => {
 
         readStream.pipe(transform).pipe(writeStream);
 
-        readStream.write(Buffer.from('foo\nba'));
+        readStream.write('foo\nba');
         readStream.write(Buffer.from('r\r\n\n\r'));
         readStream.end(Buffer.from('\nbaz'));
       });
@@ -57,7 +57,7 @@ describe('ReadlineTransform', () => {
       readStream.pipe(transform).pipe(writeStream);
 
       readStream.write(Buffer.from('foo\r\nbar\n'));
-      readStream.end(Buffer.from('\r\nbaz\r\n'));
+      readStream.end('\r\nbaz\r\n');
     });
 
     context('ignoreEndOfBreak is false', () => {
@@ -74,7 +74,7 @@ describe('ReadlineTransform', () => {
         readStream.pipe(transform).pipe(writeStream);
 
         readStream.write(Buffer.from('foo\r\nbar\n'));
-        readStream.end(Buffer.from('\r\nbaz\r\n'));
+        readStream.end('\r\nbaz\r\n');
       });
     })
 
@@ -91,7 +91,7 @@ describe('ReadlineTransform', () => {
 
         readStream.pipe(transform).pipe(writeStream);
 
-        readStream.write(Buffer.from('foo\r\nbar\n'));
+        readStream.write('foo\r\nbar\n');
         readStream.end(Buffer.from('\r\nbaz\r\n'));
       });
     })
@@ -110,7 +110,7 @@ describe('ReadlineTransform', () => {
         readStream.pipe(transform).pipe(writeStream);
 
         readStream.write(Buffer.from('foo\n \n'));
-        readStream.write(Buffer.from('\n\n'));
+        readStream.write('\n\n');
         readStream.write(Buffer.from('bar\n'));
         readStream.end();
       });
