@@ -18,9 +18,9 @@ describe('ReadlineTransform', () => {
 
       readStream.pipe(transform).pipe(writeStream);
 
-      readStream.write(new Buffer('foo\nba'));
-      readStream.write(new Buffer('r\r'));
-      readStream.end(new Buffer('\nbaz'));
+      readStream.write(Buffer.from('foo\nba'));
+      readStream.write('r\r');
+      readStream.end(Buffer.from('\nbaz'));
     });
 
     context('data contains empty lines and skipEmpty option is true', () => {
@@ -36,9 +36,9 @@ describe('ReadlineTransform', () => {
 
         readStream.pipe(transform).pipe(writeStream);
 
-        readStream.write(new Buffer('foo\nba'));
-        readStream.write(new Buffer('r\r\n\n\r'));
-        readStream.end(new Buffer('\nbaz'));
+        readStream.write('foo\nba');
+        readStream.write(Buffer.from('r\r\n\n\r'));
+        readStream.end(Buffer.from('\nbaz'));
       });
     })
   })
@@ -56,8 +56,8 @@ describe('ReadlineTransform', () => {
 
       readStream.pipe(transform).pipe(writeStream);
 
-      readStream.write(new Buffer('foo\r\nbar\n'));
-      readStream.end(new Buffer('\r\nbaz\r\n'));
+      readStream.write(Buffer.from('foo\r\nbar\n'));
+      readStream.end('\r\nbaz\r\n');
     });
 
     context('ignoreEndOfBreak is false', () => {
@@ -73,8 +73,8 @@ describe('ReadlineTransform', () => {
 
         readStream.pipe(transform).pipe(writeStream);
 
-        readStream.write(new Buffer('foo\r\nbar\n'));
-        readStream.end(new Buffer('\r\nbaz\r\n'));
+        readStream.write(Buffer.from('foo\r\nbar\n'));
+        readStream.end('\r\nbaz\r\n');
       });
     })
 
@@ -91,8 +91,8 @@ describe('ReadlineTransform', () => {
 
         readStream.pipe(transform).pipe(writeStream);
 
-        readStream.write(new Buffer('foo\r\nbar\n'));
-        readStream.end(new Buffer('\r\nbaz\r\n'));
+        readStream.write('foo\r\nbar\n');
+        readStream.end(Buffer.from('\r\nbaz\r\n'));
       });
     })
 
@@ -109,9 +109,9 @@ describe('ReadlineTransform', () => {
 
         readStream.pipe(transform).pipe(writeStream);
 
-        readStream.write(new Buffer('foo\n \n'));
-        readStream.write(new Buffer('\n\n'));
-        readStream.write(new Buffer('bar\n'));
+        readStream.write(Buffer.from('foo\n \n'));
+        readStream.write('\n\n');
+        readStream.write(Buffer.from('bar\n'));
         readStream.end();
       });
     })
@@ -131,7 +131,7 @@ describe('ReadlineTransform', () => {
 
       readStream.pipe(transform).pipe(writeStream);
 
-      readStream.write(new Buffer('_\nfoo_\nbar_\nbaz_\n_\n'));
+      readStream.write(Buffer.from('_\nfoo_\nbar_\nbaz_\n_\n'));
       readStream.end();
     });
   })
