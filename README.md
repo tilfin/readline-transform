@@ -27,6 +27,7 @@ $ npm install -save readline-transform
   * `skipEmpty` is boolean. if line is empty string, skip it (default: `false`)
 
 ### An example 
+
 ```javascript
 const { PassThrough } = require('stream');
 const ReadlineTransform = require('readline-transform');
@@ -46,7 +47,6 @@ readStream.pipe(transform).pipe(writeStream);
 readStream.write(new Buffer('foo\nba'));
 readStream.write(new Buffer('r\r\n\n\r'));
 readStream.end(new Buffer('\nbaz'));
-});
 ```
 
 ### Console output
