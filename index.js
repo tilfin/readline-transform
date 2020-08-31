@@ -1,4 +1,4 @@
-const { Transform } = require('stream');
+const { Transform } = require("stream");
 
 /**
  * The ReadlineTransform is reading String or Buffer content from a Readable stream
@@ -8,64 +8,37 @@ const { Transform } = require('stream');
  * @param {Boolean} opts.ignoreEndOfBreak - if content ends with line break, ignore last empty line (default: true)
  * @param {Boolean} opts.skipEmpty - if line is empty string, skip it (default: false)
  */
+const NEWLINE = 0x0a;
 class ReadlineTransform extends Transform {
-  constructor(options) {
-    const opts = options || {};
-    opts.objectMode = true;
-    super(opts);
-    this._brRe = opts.breakMatcher || /\r?\n/;
-    this._ignoreEndOfBreak = 'ignoreEndOfBreak' in opts ? Boolean(opts.ignoreEndOfBreak) : true;
-    this._skipEmpty = Boolean(opts.skipEmpty);
-    this._buf = null;
+  constructor() {
+    super();
+    this._buf = Buffer.alloc(1024);
+    this.wptr = 0;
   }
 
-  _transform(chunk, encoding, cb) {
-    let str;
-    if (Buffer.isBuffer(chunk) || encoding === 'buffer') {
-      str = chunk.toString('utf8');
+  _transform(chunk, enc, cb) {
+    let lb;
+    while ((lb = chunk.indexOf(NEWLINE)) >= 0 && chunk.length) {
+      this._emitData(chunk.slice(0, lb + 1));
+      chunk = chunk.slice(lb + 1);
+    }
+    if (chunk.length) {
+      chunk.copy(this._buf, this.wptr, 0, chunk.length);
+      this.wptr += chunk.length;
+    }
+    cb(null, null);
+  }
+
+  _emitData(slice) {
+    if (this.wptr) {
+      this.emit("data", Buffer.concat([this._buf.slice(0, this.wptr), slice]));
+      this.wptr = 0;
     } else {
-      str = chunk;
-    }
-
-    try {
-      if (this._buf !== null) {
-        this._buf += str;  
-      } else {
-        this._buf = str;  
-      }
-
-      const lines = this._buf.split(this._brRe);
-      const lastIndex = lines.length - 1;
-      for (let i = 0; i < lastIndex; i++) {
-        this._writeItem(lines[i]);
-      }
-
-      const lastLine = lines[lastIndex];
-      if (lastLine.length) {
-        this._buf = lastLine;
-      } else if (!this._ignoreEndOfBreak) {
-        this._buf = '';
-      } else {
-        this._buf = null;
-      }
-      cb();
-    } catch(err) {
-      cb(err); // invalid data type;
+      this.emit("data", slice);
     }
   }
-
   _flush(cb) {
-    if (this._buf !== null) {
-      this._writeItem(this._buf);
-      this._buf = null;
-    }
-    cb();
-  }
-
-  _writeItem(line) {
-    if (line.length > 0 || !this._skipEmpty) {
-      this.push(line);
-    }
+    cb(this._buf.slice(0, this.wptr));
   }
 }
 
