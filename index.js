@@ -15,11 +15,11 @@ class ReadlineTransform extends Transform {
   #buf;
 
   constructor(options = {}) {
-    options.objectMode = true;
-    super(options);
-    this.#brRe = options.breakMatcher || /\r?\n/;
-    this.#ignoreEndOfBreak = 'ignoreEndOfBreak' in options ? Boolean(options.ignoreEndOfBreak) : true;
-    this.#skipEmpty = Boolean(options.skipEmpty);
+    const { breakMatcher = /\r?\n/, ignoreEndOfBreak = true, skipEmpty = false, ...opts } = options;
+    super({ ...opts, objectMode: true });
+    this.#brRe = breakMatcher;
+    this.#ignoreEndOfBreak = ignoreEndOfBreak;
+    this.#skipEmpty = skipEmpty;
     this.#buf = null;
   }
 
