@@ -74,3 +74,4 @@ class ReadlineTransform extends Transform {
 }
 
 module.exports = exports.default = ReadlineTransform;
+module.exports.ReadlineTransform = ReadlineTransform;

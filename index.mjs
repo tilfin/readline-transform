@@ -1,1 +1,1 @@
-export { default as ReadlineTransform } from './index.js';
+export { ReadlineTransform, default } from './index.js';
