@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { PassThrough } from 'node:stream'; 
 import { ReadlineTransform } from '../index.mjs';
+//import ReadlineTransform from '../index.mjs';
 
 const transform = new ReadlineTransform({ skipEmpty: true });
 const fileStream = fs.createReadStream('./data.txt');

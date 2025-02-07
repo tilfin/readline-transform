@@ -32,7 +32,7 @@ $ npm install -save readline-transform
 
 ```javascript
 const { PassThrough } = require('stream');
-const ReadlineTransform = require('readline-transform');
+const { ReadlineTransform } = require('readline-transform');
 
 const readStream = new PassThrough();
 const transform = new ReadlineTransform({ skipEmpty: true });

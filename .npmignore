@@ -1,5 +1,5 @@
 coverage
 example
 test
-.gitignore
-.github
+.*
+*.tgz
