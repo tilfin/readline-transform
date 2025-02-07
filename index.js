@@ -9,14 +9,18 @@ const { Transform } = require('stream');
  * @param {Boolean} opts.skipEmpty - if line is empty string, skip it (default: false)
  */
 class ReadlineTransform extends Transform {
-  constructor(options) {
-    const opts = options || {};
-    opts.objectMode = true;
-    super(opts);
-    this._brRe = opts.breakMatcher || /\r?\n/;
-    this._ignoreEndOfBreak = 'ignoreEndOfBreak' in opts ? Boolean(opts.ignoreEndOfBreak) : true;
-    this._skipEmpty = Boolean(opts.skipEmpty);
-    this._buf = null;
+  #brRe;
+  #ignoreEndOfBreak;
+  #skipEmpty;
+  #buf;
+
+  constructor(options = {}) {
+    const { breakMatcher = /\r?\n/, ignoreEndOfBreak = true, skipEmpty = false, ...opts } = options;
+    super({ ...opts, objectMode: true });
+    this.#brRe = breakMatcher;
+    this.#ignoreEndOfBreak = ignoreEndOfBreak;
+    this.#skipEmpty = skipEmpty;
+    this.#buf = null;
   }
 
   _transform(chunk, encoding, cb) {
@@ -28,13 +32,13 @@ class ReadlineTransform extends Transform {
     }
 
     try {
-      if (this._buf !== null) {
-        this._buf += str;  
+      if (this.#buf !== null) {
+        this.#buf += str;  
       } else {
-        this._buf = str;  
+        this.#buf = str;  
       }
 
-      const lines = this._buf.split(this._brRe);
+      const lines = this.#buf.split(this.#brRe);
       const lastIndex = lines.length - 1;
       for (let i = 0; i < lastIndex; i++) {
         this._writeItem(lines[i]);
@@ -42,11 +46,11 @@ class ReadlineTransform extends Transform {
 
       const lastLine = lines[lastIndex];
       if (lastLine.length) {
-        this._buf = lastLine;
-      } else if (!this._ignoreEndOfBreak) {
-        this._buf = '';
+        this.#buf = lastLine;
+      } else if (!this.#ignoreEndOfBreak) {
+        this.#buf = '';
       } else {
-        this._buf = null;
+        this.#buf = null;
       }
       cb();
     } catch(err) {
@@ -55,15 +59,15 @@ class ReadlineTransform extends Transform {
   }
 
   _flush(cb) {
-    if (this._buf !== null) {
-      this._writeItem(this._buf);
-      this._buf = null;
+    if (this.#buf !== null) {
+      this._writeItem(this.#buf);
+      this.#buf = null;
     }
     cb();
   }
 
   _writeItem(line) {
-    if (line.length > 0 || !this._skipEmpty) {
+    if (line.length > 0 || !this.#skipEmpty) {
       this.push(line);
     }
   }

@@ -1,5 +1,5 @@
 const { PassThrough } = require('stream');
-const ReadlineTransform = require('./');
+const ReadlineTransform = require('../');
 
 const readStream = new PassThrough();
 const transform = new ReadlineTransform({ skipEmpty: true });

@@ -26,11 +26,37 @@ $ npm install -save readline-transform
   * `ignoreEndOfBreak` is boolean. if content ends with line break, ignore last empty line. (default: `true`)
   * `skipEmpty` is boolean. if line is empty string, skip it (default: `false`)
 
-### An example 
+## Examples
+
+### CommonJS 
 
 ```javascript
 const { PassThrough } = require('stream');
 const ReadlineTransform = require('readline-transform');
+
+const readStream = new PassThrough();
+const transform = new ReadlineTransform({ skipEmpty: true });
+const writeStream = new PassThrough({ objectMode: true });
+
+writeStream.on('data', (line) => {
+  console.log(line);
+}).on('finish', () => {
+  console.log('<<< all done >>>');
+});
+
+readStream.pipe(transform).pipe(writeStream);
+
+readStream.write(new Buffer('foo\nba'));
+readStream.write(new Buffer('r\r\n\n\r'));
+readStream.end(new Buffer('\nbaz'));
+```
+
+### ES Module 
+
+```javascript
+import fs from 'node:fs';
+import { PassThrough } from 'node:stream'; 
+import { ReadlineTransform } from 'readline-transform';
 
 const readStream = new PassThrough();
 const transform = new ReadlineTransform({ skipEmpty: true });
