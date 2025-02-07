@@ -2,4 +2,4 @@ coverage
 example
 test
 .gitignore
-.travis.yml
+.github
