@@ -21,6 +21,7 @@ jobs:
           cache: 'npm'
       - name: Run ci_test
         run: npm run ci_test
-      - name: Run coverage
-        if: success()
-        run: npm run coverage
+      - name: Publish to coveralls.io
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ github.token }}
