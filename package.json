@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Transform stream to read line-by-line and write a string",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  },
   "scripts": {
     "test": "mocha",
     "ci_test": "nyc npm test"
