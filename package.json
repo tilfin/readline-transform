@@ -26,11 +26,11 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "coveralls": "^3.0.4",
-    "mocha": "^6.2.0",
-    "nyc": "^14.1.1"
+    "coveralls": "^3.1.1",
+    "mocha": "^10.8.2",
+    "nyc": "^17.1.0"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=18"
   }
 }
