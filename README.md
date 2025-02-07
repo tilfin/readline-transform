@@ -3,9 +3,6 @@
 [![npm](https://img.shields.io/npm/v/readline-transform.svg)](https://www.npmjs.com/package/readline-transform)
 [![Node](https://img.shields.io/node/v/readline-transform.svg)]()
 [![License](https://img.shields.io/github/license/tilfin/readline-transform.svg)]()
-[![dependencies Status](https://david-dm.org/tilfin/readline-transform/status.svg)](https://david-dm.org/tilfin/readline-transform)
-[![Build Status](https://travis-ci.org/tilfin/readline-transform.svg?branch=master)](https://travis-ci.org/tilfin/readline-transform)
-[![Coverage Status](https://coveralls.io/repos/github/tilfin/readline-transform/badge.svg?branch=master)](https://coveralls.io/github/tilfin/readline-transform?branch=master)
 
 Reading String or Buffer content from a Readable stream and writing each line which ends without line break as object
 
