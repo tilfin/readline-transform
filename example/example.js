@@ -14,6 +14,6 @@ writeStream.on('data', (line) => {
 
 readStream.pipe(transform).pipe(writeStream);
 
-readStream.write(new Buffer('foo\nba'));
-readStream.write(new Buffer('r\r\n\n\r'));
-readStream.end(new Buffer('\nbaz'));
+readStream.write(Buffer.from('foo\nba'));
+readStream.write(Buffer.from('r\r\n\n\r'));
+readStream.end(Buffer.from('\nbaz'));
