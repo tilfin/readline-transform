@@ -1,10 +1,11 @@
 import assert from 'assert';
+import { describe, test } from 'node:test';
 import { PassThrough } from 'stream';
 import { ReadlineTransform } from '../index.mjs';
 import MemoryWriteStream from './memory_write_stream.js';
 
 describe('ReadlineTransform by ES module', () => {
-  it('succeeds', (done) => {
+  test('succeeds', (t, done) => {
     const readStream = new PassThrough();
     const transform = new ReadlineTransform();
     const writeStream = new MemoryWriteStream();
