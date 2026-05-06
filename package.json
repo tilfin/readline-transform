@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "test": "mocha",
+    "test": "node --test test/*.test.*",
     "ci_test": "nyc npm test"
   },
   "keywords": [
@@ -34,8 +34,7 @@
   "author": "Toshimitsu Takahashi",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^10.8.2",
-    "nyc": "^17.1.0"
+    "nyc": "^18.0.0"
   },
   "engines": {
     "node": ">=22"

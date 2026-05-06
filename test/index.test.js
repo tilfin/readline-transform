@@ -1,12 +1,13 @@
 const assert = require('assert');
+const { describe, test } = require('node:test');
 const { PassThrough } = require('stream');
-const ReadlineTransform = require('../');
+const ReadlineTransform = require('../index.js');
 const MemoryWriteStream = require('./memory_write_stream');
 
 describe('ReadlineTransform', () => {
 
-  context('data ends without line break', () => {
-    it('transforms all lines', (done) => {
+  describe('data ends without line break', () => {
+    test('transforms all lines', (t, done) => {
       const readStream = new PassThrough();
       const transform = new ReadlineTransform();
       const writeStream = new MemoryWriteStream();
@@ -23,8 +24,8 @@ describe('ReadlineTransform', () => {
       readStream.end(Buffer.from('\nbaz'));
     });
 
-    context('data contains empty lines and skipEmpty option is true', () => {
-      it('transforms with dropping empty lines', (done) => {
+    describe('data contains empty lines and skipEmpty option is true', () => {
+      test('transforms with dropping empty lines', (t, done) => {
         const readStream = new PassThrough();
         const transform = new ReadlineTransform({ skipEmpty: true });
         const writeStream = new MemoryWriteStream();
@@ -43,8 +44,8 @@ describe('ReadlineTransform', () => {
     })
   })
 
-  context('data ends with line break', () => {
-    it('transforms all lines except last empty line', (done) => {
+  describe('data ends with line break', () => {
+    test('transforms all lines except last empty line', (t, done) => {
       const readStream = new PassThrough();
       const transform = new ReadlineTransform();
       const writeStream = new MemoryWriteStream();
@@ -60,8 +61,8 @@ describe('ReadlineTransform', () => {
       readStream.end('\r\nbaz\r\n');
     });
 
-    context('ignoreEndOfBreak is false', () => {
-      it('transforms all lines', (done) => {
+    describe('ignoreEndOfBreak is false', () => {
+      test('transforms all lines', (t, done) => {
         const readStream = new PassThrough();
         const transform = new ReadlineTransform({ ignoreEndOfBreak: false });
         const writeStream = new MemoryWriteStream();
@@ -78,8 +79,8 @@ describe('ReadlineTransform', () => {
       });
     })
 
-    context('skipEmpty option is true', () => {
-      it('transforms with dropping empty lines', (done) => {
+    describe('skipEmpty option is true', () => {
+      test('transforms with dropping empty lines', (t, done) => {
         const readStream = new PassThrough();
         const transform = new ReadlineTransform({ skipEmpty: true });
         const writeStream = new MemoryWriteStream();
@@ -96,8 +97,8 @@ describe('ReadlineTransform', () => {
       });
     })
 
-    context('ignoreEndOfBreak is false and skipEmpty option is true', () => {
-      it('works with dropping all empty lines', (done) => {
+    describe('ignoreEndOfBreak is false and skipEmpty option is true', () => {
+      test('works with dropping all empty lines', (t, done) => {
         const readStream = new PassThrough();
         const transform = new ReadlineTransform({ ignoreEndOfBreak: false, skipEmpty: true });
         const writeStream = new MemoryWriteStream();
@@ -118,8 +119,8 @@ describe('ReadlineTransform', () => {
 
   })
 
-  context('line break is special', () => {
-    it('transforms with dropping last empty line', (done) => {
+  describe('line break is special', () => {
+    test('transforms with dropping last empty line', (t, done) => {
       const readStream = new PassThrough();
       const transform = new ReadlineTransform({ breakMatcher: '_\n' });
       const writeStream = new MemoryWriteStream();
