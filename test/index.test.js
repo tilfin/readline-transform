@@ -137,4 +137,76 @@ describe('ReadlineTransform', () => {
     });
   })
 
+  context('multi-byte characters are split across Buffer chunks', () => {
+    it('decodes 2-byte characters correctly', (done) => {
+      const readStream = new PassThrough();
+      const transform = new ReadlineTransform();
+      const writeStream = new MemoryWriteStream();
+
+      writeStream.on('finish', () => {
+        assert.deepStrictEqual(writeStream.data, ['héllo', 'wörld']);
+        done();
+      });
+
+      readStream.pipe(transform).pipe(writeStream);
+
+      const input = Buffer.from('héllo\nwörld\n');
+      // 'é' is 0xC3 0xA9; split between those bytes
+      readStream.write(input.subarray(0, 2));
+      readStream.end(input.subarray(2));
+    });
+
+    it('decodes 3-byte and 4-byte characters split at every byte', (done) => {
+      const readStream = new PassThrough();
+      const transform = new ReadlineTransform();
+      const writeStream = new MemoryWriteStream();
+
+      writeStream.on('finish', () => {
+        assert.deepStrictEqual(writeStream.data, ['あいう', '😀𠮷', 'かき']);
+        done();
+      });
+
+      readStream.pipe(transform).pipe(writeStream);
+
+      const input = Buffer.from('あいう\n😀𠮷\r\nかき');
+      for (let i = 0; i < input.length; i++) {
+        readStream.write(input.subarray(i, i + 1));
+      }
+      readStream.end();
+    });
+
+    it('flushes incomplete bytes before a following string chunk', (done) => {
+      const transform = new ReadlineTransform();
+      const writeStream = new MemoryWriteStream();
+
+      writeStream.on('finish', () => {
+        assert.deepStrictEqual(writeStream.data, ['foo�', 'bar']);
+        done();
+      });
+
+      transform.pipe(writeStream);
+
+      // write directly so that the string chunk is not converted to Buffer by PassThrough
+      transform.write(Buffer.from([0x66, 0x6f, 0x6f, 0xe3, 0x81])); // 'foo' + first 2 bytes of 'あ'
+      transform.write('\nbar');
+      transform.end();
+    });
+
+    it('emits replacement character for incomplete bytes at the end', (done) => {
+      const readStream = new PassThrough();
+      const transform = new ReadlineTransform();
+      const writeStream = new MemoryWriteStream();
+
+      writeStream.on('finish', () => {
+        assert.deepStrictEqual(writeStream.data, ['foo', 'bar�']);
+        done();
+      });
+
+      readStream.pipe(transform).pipe(writeStream);
+
+      readStream.write(Buffer.from('foo\nbar'));
+      readStream.end(Buffer.from([0xe3, 0x81])); // first 2 bytes of 'あ'
+    });
+  })
+
 })
