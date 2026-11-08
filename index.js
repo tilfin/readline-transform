@@ -1,4 +1,5 @@
 const { Transform } = require('stream');
+const { StringDecoder } = require('string_decoder');
 
 /**
  * The ReadlineTransform is reading String or Buffer content from a Readable stream
@@ -13,6 +14,7 @@ class ReadlineTransform extends Transform {
   #ignoreEndOfBreak;
   #skipEmpty;
   #buf;
+  #decoder;
 
   constructor(options = {}) {
     const { breakMatcher = /\r?\n/, ignoreEndOfBreak = true, skipEmpty = false, ...opts } = options;
@@ -21,14 +23,18 @@ class ReadlineTransform extends Transform {
     this.#ignoreEndOfBreak = ignoreEndOfBreak;
     this.#skipEmpty = skipEmpty;
     this.#buf = null;
+    this.#decoder = new StringDecoder('utf8');
   }
 
   _transform(chunk, encoding, cb) {
     let str;
     if (Buffer.isBuffer(chunk) || encoding === 'buffer') {
-      str = chunk.toString('utf8');
+      // StringDecoder keeps incomplete multi-byte sequences until the next chunk
+      str = this.#decoder.write(chunk);
     } else {
-      str = chunk;
+      // flush bytes left by a preceding Buffer chunk before a string chunk
+      const rest = this.#decoder.end();
+      str = rest ? rest + chunk : chunk;
     }
 
     try {
@@ -59,6 +65,10 @@ class ReadlineTransform extends Transform {
   }
 
   _flush(cb) {
+    const rest = this.#decoder.end();
+    if (rest) {
+      this.#buf = (this.#buf ?? '') + rest;
+    }
     if (this.#buf !== null) {
       this._writeItem(this.#buf);
       this.#buf = null;
