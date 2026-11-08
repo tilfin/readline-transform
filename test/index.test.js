@@ -137,6 +137,46 @@ describe('ReadlineTransform', () => {
     });
   })
 
+  context('input is string chunks', () => {
+    it('transforms string-only chunks', (done) => {
+      const readStream = new PassThrough();
+      readStream.setEncoding('utf8');
+      const transform = new ReadlineTransform();
+      const writeStream = new MemoryWriteStream();
+
+      writeStream.on('finish', () => {
+        assert.deepStrictEqual(writeStream.data, ['foo', 'bar', 'あいう', 'baz']);
+        done();
+      });
+
+      readStream.pipe(transform).pipe(writeStream);
+
+      readStream.write('foo\nba');
+      readStream.write('r\r');
+      readStream.write('\nあい');
+      readStream.end('う\nbaz\n');
+    });
+
+    it('transforms mixed Buffer and string chunks', (done) => {
+      const readStream = new PassThrough({ objectMode: true });
+      const transform = new ReadlineTransform();
+      const writeStream = new MemoryWriteStream();
+
+      writeStream.on('finish', () => {
+        assert.deepStrictEqual(writeStream.data, ['foo', 'bar', 'あいう', 'baz']);
+        done();
+      });
+
+      readStream.pipe(transform).pipe(writeStream);
+
+      readStream.write(Buffer.from('foo\nba'));
+      readStream.write('r\r');
+      readStream.write(Buffer.from('\nあい'));
+      readStream.write('う\nba');
+      readStream.end(Buffer.from('z'));
+    });
+  })
+
   context('multi-byte characters are split across Buffer chunks', () => {
     it('decodes 2-byte characters correctly', (done) => {
       const readStream = new PassThrough();
