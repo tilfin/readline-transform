@@ -137,8 +137,8 @@ describe('ReadlineTransform', () => {
     });
   })
 
-  context('input is string chunks', () => {
-    it('transforms string-only chunks', (done) => {
+  describe('input is string chunks', () => {
+    test('transforms string-only chunks', (t, done) => {
       const readStream = new PassThrough();
       readStream.setEncoding('utf8');
       const transform = new ReadlineTransform();
@@ -157,7 +157,7 @@ describe('ReadlineTransform', () => {
       readStream.end('う\nbaz\n');
     });
 
-    it('transforms mixed Buffer and string chunks', (done) => {
+    test('transforms mixed Buffer and string chunks', (t, done) => {
       const readStream = new PassThrough({ objectMode: true });
       const transform = new ReadlineTransform();
       const writeStream = new MemoryWriteStream();
@@ -177,8 +177,8 @@ describe('ReadlineTransform', () => {
     });
   })
 
-  context('multi-byte characters are split across Buffer chunks', () => {
-    it('decodes 2-byte characters correctly', (done) => {
+  describe('multi-byte characters are split across Buffer chunks', () => {
+    test('decodes 2-byte characters correctly', (t, done) => {
       const readStream = new PassThrough();
       const transform = new ReadlineTransform();
       const writeStream = new MemoryWriteStream();
@@ -196,7 +196,7 @@ describe('ReadlineTransform', () => {
       readStream.end(input.subarray(2));
     });
 
-    it('decodes 3-byte and 4-byte characters split at every byte', (done) => {
+    test('decodes 3-byte and 4-byte characters split at every byte', (t, done) => {
       const readStream = new PassThrough();
       const transform = new ReadlineTransform();
       const writeStream = new MemoryWriteStream();
@@ -215,7 +215,7 @@ describe('ReadlineTransform', () => {
       readStream.end();
     });
 
-    it('flushes incomplete bytes before a following string chunk', (done) => {
+    test('flushes incomplete bytes before a following string chunk', (t, done) => {
       const transform = new ReadlineTransform();
       const writeStream = new MemoryWriteStream();
 
@@ -232,7 +232,7 @@ describe('ReadlineTransform', () => {
       transform.end();
     });
 
-    it('emits replacement character for incomplete bytes at the end', (done) => {
+    test('emits replacement character for incomplete bytes at the end', (t, done) => {
       const readStream = new PassThrough();
       const transform = new ReadlineTransform();
       const writeStream = new MemoryWriteStream();
